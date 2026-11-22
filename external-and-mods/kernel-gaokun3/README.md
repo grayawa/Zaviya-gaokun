@@ -29,11 +29,15 @@ The recipe additionally:
 
 - enables EFI and EFI stub support for systemd-boot;
 - sets the binderfs device names expected by the Steam Frame userspace;
-- verifies KPROBES, FTRACE, KPROBE_EVENTS, TRACING and TRACEFS_FS remain enabled
-  after olddefconfig.
+- verifies KPROBES, FTRACE, KPROBE_EVENTS and TRACING remain enabled after
+  olddefconfig;
+- verifies fs/Makefile builds fs/tracefs whenever CONFIG_TRACING=y.
 
-The pinned gaokun3_defconfig already contains all five tracing/kprobe options.
-No duplicate kernel patch is carried here.
+The pinned defconfig still contains CONFIG_TRACEFS_FS=y, but this kernel tree
+no longer defines TRACEFS_FS as a Kconfig symbol, so olddefconfig drops it.
+Tracefs is instead built directly under CONFIG_TRACING. The build checks that
+source-level wiring rather than pretending the obsolete symbol survived. No
+duplicate kernel patch is carried here.
 
 ## Build
 
