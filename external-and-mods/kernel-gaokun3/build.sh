@@ -56,7 +56,7 @@ fetch_pinned_repo() {
 
     [[ ! -e "$destination" ]] || die "$destination exists but is not a Git checkout; remove it or set a different source path"
     mkdir -p "$(dirname "$destination")"
-    log "fetch ${repository}${commit}"
+    log "fetch ${repository}@${commit}"
     git init -q "$destination"
     git -C "$destination" remote add origin "https://github.com/${repository}.git"
     git -C "$destination" fetch --depth=1 origin "$commit"
