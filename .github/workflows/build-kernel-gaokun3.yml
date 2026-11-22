@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 150
     env:
-      WORK: "${{ runner.temp }}/zaviya-gaokun3-kernel"
+      WORK: "${{ github.workspace }}/zaviya-gaokun3-kernel"
     steps:
       - name: Checkout Zaviya port
         uses: actions/checkout@v7
@@ -45,6 +45,6 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: gaokun3-kernel-${{ env.KERNEL_RELEASE }}
-          path: "${{ runner.temp }}/zaviya-gaokun3-kernel/output/${{ env.KERNEL_RELEASE }}"
+          path: "${{ github.workspace }}/zaviya-gaokun3-kernel/output/${{ env.KERNEL_RELEASE }}"
           if-no-files-found: error
           retention-days: 14
