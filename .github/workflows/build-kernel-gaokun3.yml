@@ -21,7 +21,7 @@ jobs:
       WORK: "${{ runner.temp }}/zaviya-gaokun3-kernel"
     steps:
       - name: Checkout Zaviya port
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Install kernel build dependencies
         run: |
@@ -42,7 +42,7 @@ jobs:
           echo "KERNEL_RELEASE=$kernel_release" >> "$GITHUB_ENV"
 
       - name: Upload kernel artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: gaokun3-kernel-${{ env.KERNEL_RELEASE }}
           path: "${{ runner.temp }}/zaviya-gaokun3-kernel/output/${{ env.KERNEL_RELEASE }}"
