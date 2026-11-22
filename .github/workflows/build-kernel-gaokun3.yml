@@ -1,0 +1,50 @@
+name: Build Kernel - Gaokun3
+
+on:
+  push:
+    branches:
+      - gaokun3
+    paths:
+      - .github/workflows/build-kernel-gaokun3.yml
+      - external-and-mods/kernel-gaokun3/**
+      - external-and-mods/kernel-common/steamos.config
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 150
+    env:
+      WORK: "${{ runner.temp }}/zaviya-gaokun3-kernel"
+    steps:
+      - name: Checkout Zaviya port
+        uses: actions/checkout@v6
+
+      - name: Install kernel build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential bc bison flex libssl-dev libelf-dev dwarves \
+            python3 git rsync kmod
+
+      - name: Check build script syntax
+        run: bash -n external-and-mods/kernel-gaokun3/build.sh
+
+      - name: Build Gaokun3 kernel, modules, DTBs and firmware
+        run: bash external-and-mods/kernel-gaokun3/build.sh
+
+      - name: Read kernel release
+        run: |
+          kernel_release="$(cat "$WORK/output/kernel-release.txt")"
+          echo "KERNEL_RELEASE=$kernel_release" >> "$GITHUB_ENV"
+
+      - name: Upload kernel artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: gaokun3-kernel-${{ env.KERNEL_RELEASE }}
+          path: "${{ runner.temp }}/zaviya-gaokun3-kernel/output/${{ env.KERNEL_RELEASE }}"
+          if-no-files-found: error
+          retention-days: 14
