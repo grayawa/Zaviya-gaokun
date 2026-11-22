@@ -128,9 +128,9 @@ main() {
     assert_config 'CONFIG_TRACING=y'
     # This kernel removed the TRACEFS_FS Kconfig symbol: fs/Makefile builds
     # fs/tracefs whenever CONFIG_TRACING=y. Verify that wiring instead.
-    grep -Fq 'obj-$(CONFIG_TRACING)' "$SRC/fs/Makefile" \\
-        && grep -Fq '+= tracefs/' "$SRC/fs/Makefile" \\
-        || die "tracefs is not wired to CONFIG_TRACING in this kernel tree"
+    if ! grep -Fq 'obj-$(CONFIG_TRACING)' "$SRC/fs/Makefile" || ! grep -Fq '+= tracefs/' "$SRC/fs/Makefile"; then
+        die "tracefs is not wired to CONFIG_TRACING in this kernel tree"
+    fi
     assert_config 'CONFIG_EFI=y'
     assert_config 'CONFIG_EFI_STUB=y'
     assert_config 'CONFIG_ANDROID_BINDER_IPC=y'
